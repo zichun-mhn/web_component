@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Iframe Example</title>
+    <script type="text/javascript">
+      window.addEventListener('message', function(event) {
+        // 处理从父页面发送来的数据
+        var data = event.data;
+        console.log('Received data from parent:', data);
+        document.getElementById('data').innerText = JSON.stringify(data, null, 2);
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Hello, Iframe</h1>
+    <pre id="data"></pre>
+  </body>
+</html>
