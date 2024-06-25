@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +14,6 @@
             height: 100vh;
             margin: 0;
         }
-
         .container {
             background-color: #fff;
             padding: 20px;
@@ -25,7 +23,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <h1>Welcome Page</h1>
@@ -40,31 +37,32 @@
         const username = "HardcodedUsername";
         document.getElementById('displayUsername').textContent = username;
 
-        // Function to get token from URL parameters
-        function getTokenFromUrl() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('token');
-        }
-
         // Function to handle POST message event
         function receiveMessage(event) {
             if (event.origin !== "http://otherwebsite.com") {
                 // Only accept messages from trusted origin
                 return;
             }
-            const token = event.data.token;
-            document.getElementById('displayToken').textContent = token;
+
+            try {
+                const data = JSON.parse(event.data);
+                const token = data.token;
+
+                // Display the token
+                document.getElementById('displayToken').textContent = token;
+            } catch (error) {
+                console.error("Invalid message data", error);
+            }
         }
 
         // Add event listener for receiving messages
         window.addEventListener("message", receiveMessage, false);
 
-        // Optionally, you can retrieve token from URL parameters if passed that way
-        const token = getTokenFromUrl();
-        if (token) {
-            document.getElementById('displayToken').textContent = token;
-        }
+        // Simulate the token reception for demonstration purposes
+        window.onload = function() {
+            // This line is only for testing purposes to simulate token reception
+            window.postMessage(JSON.stringify({ token: "exampleToken123" }), "*");
+        };
     </script>
 </body>
-
 </html>
