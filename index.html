@@ -1,18 +1,70 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Iframe Example</title>
-    <script type="text/javascript">
-      window.addEventListener('message', function(event) {
-        // 处理从父页面发送来的数据
-        var data = event.data;
-        console.log('Received data from parent:', data);
-        document.getElementById('data').innerText = JSON.stringify(data, null, 2);
-      });
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Welcome Page</h1>
+        <div id="welcomeMessage">
+            <p>Welcome, <span id="displayUsername"></span>!</p>
+            <p>Your token is: <span id="displayToken"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Hardcoded username
+        const username = "HardcodedUsername";
+        document.getElementById('displayUsername').textContent = username;
+
+        // Function to get token from URL parameters
+        function getTokenFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('token');
+        }
+
+        // Function to handle POST message event
+        function receiveMessage(event) {
+            if (event.origin !== "http://otherwebsite.com") {
+                // Only accept messages from trusted origin
+                return;
+            }
+            const token = event.data.token;
+            document.getElementById('displayToken').textContent = token;
+        }
+
+        // Add event listener for receiving messages
+        window.addEventListener("message", receiveMessage, false);
+
+        // Optionally, you can retrieve token from URL parameters if passed that way
+        const token = getTokenFromUrl();
+        if (token) {
+            document.getElementById('displayToken').textContent = token;
+        }
     </script>
-  </head>
-  <body>
-    <h1>Hello, Iframe</h1>
-    <pre id="data"></pre>
-  </body>
+</body>
+
 </html>
