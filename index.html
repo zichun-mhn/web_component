@@ -39,8 +39,9 @@
 
         // Function to handle POST message event
         function receiveMessage(event) {
-            if (event.origin !== "http://otherwebsite.com") {
+            if (event.origin !== "http://trustedwebsite.com") {
                 // Only accept messages from trusted origin
+                console.warn("Received message from unauthorized origin:", event.origin);
                 return;
             }
 
@@ -57,12 +58,6 @@
 
         // Add event listener for receiving messages
         window.addEventListener("message", receiveMessage, false);
-
-        // Simulate the token reception for demonstration purposes
-        window.onload = function() {
-            // This line is only for testing purposes to simulate token reception
-            window.postMessage(JSON.stringify({ token: "exampleToken123" }), "*");
-        };
     </script>
 </body>
 </html>
