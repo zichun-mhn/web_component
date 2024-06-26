@@ -1,63 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Welcome Page</h1>
-        <div id="welcomeMessage">
-            <p>Welcome, <span id="displayUsername"></span>!</p>
-            <p>Your token is: <span id="displayToken"></span></p>
-        </div>
-    </div>
+from flask import Flask, request, render_template_string,jsonify
+import jwt
+import datetime
+from flask_cors import CORS
 
-    <script>
-        // Hardcoded username
-        const username = "HardcodedUsername";
-        document.getElementById('displayUsername').textContent = username;
+app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
-        // Function to handle POST message event
-        function receiveMessage(event) {
-            if (event.origin !== "http://trustedwebsite.com") {
-                // Only accept messages from trusted origin
-                console.warn("Received message from unauthorized origin:", event.origin);
-                return;
-            }
+@app.route('/display', methods=['POST'])
+def display():
+    token = request.json  # Get the JWT from the POST request
+    try:
+        # Decode the JWT without verification
+        data = jwt.decode(token, options={"verify_signature": False})
+        
+        # Check if the token is expired
+        if 'exp' in data:
+            exp = datetime.datetime.utcfromtimestamp(data['exp'])
+            if exp < datetime.datetime.utcnow():
+                return jsonify({"error": "Token has expired"}), 401
+      
+      
+        username = data.get('name')
+        email = data.get('email')
 
-            try {
-                const data = JSON.parse(event.data);
-                const token = data.token;
+        # Render the HTML template with the extracted data
+        return render_template_string('''
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>User Info</title>
+            </head>
+            <body>
+                <h1>User Information</h1>
+                <p>Username: {{ username }}</p>
+                <p>Email: {{ email }}</p>
+            </body>
+            </html>
+        ''', username=username, email=email)
+    except jwt.DecodeError:
+        return {"error": "Invalid token"}, 401
 
-                // Display the token
-                document.getElementById('displayToken').textContent = token;
-            } catch (error) {
-                console.error("Invalid message data", error);
-            }
-        }
-
-        // Add event listener for receiving messages
-        window.addEventListener("message", receiveMessage, false);
-    </script>
-</body>
-</html>
+if __name__ == '__main__':
+    app.run(debug=True)
