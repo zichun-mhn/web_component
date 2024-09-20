@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Display Local Storage Data</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .content {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Stored JSON Data</h1>
+  <div class="content" id="jsonData">
+    <!-- JSON data will be displayed here -->
+  </div>
+
+  <script>
+    // Function to retrieve and display data from localStorage
+    function displayLocalStorageData() {
+      // Retrieve JSON string from local storage
+      const jsonData = localStorage.getItem("jsonKey");
+
+      // Check if data exists
+      if (jsonData) {
+        // Parse the JSON string into an object
+        const parsedData = JSON.parse(jsonData);
+
+        // Display the JSON object on the page
+        document.getElementById("jsonData").textContent = JSON.stringify(parsedData, null, 2);
+      } else {
+        // If no data is found, show a default message
+        document.getElementById("jsonData").textContent = "No data found in local storage.";
+      }
+    }
+
+    // Call the function when the page loads
+    window.onload = displayLocalStorageData;
+  </script>
+
+</body>
+</html>
