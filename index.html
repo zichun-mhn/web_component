@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Display Local Storage Data</title>
+  <title>Display Token from Local Storage</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,32 +14,25 @@
       padding: 10px;
       background-color: #f9f9f9;
       border: 1px solid #ddd;
+      word-wrap: break-word;
     }
   </style>
 </head>
 <body>
 
-  <h1>Stored JSON Data</h1>
+  <h1>Stored Token Data</h1>
   <div class="content" id="jsonData">
     <!-- JSON data will be displayed here -->
   </div>
 
   <script>
-    // Function to retrieve and display data from localStorage
+    // Retrieve and display the data from localStorage
     function displayLocalStorageData() {
-      // Retrieve JSON string from local storage
-      const jsonData = localStorage.getItem("jsonKey");
-
-      // Check if data exists
+      const jsonData = localStorage.getItem('jsonKey');
       if (jsonData) {
-        // Parse the JSON string into an object
-        const parsedData = JSON.parse(jsonData);
-
-        // Display the JSON object on the page
-        document.getElementById("jsonData").textContent = JSON.stringify(parsedData, null, 2);
+        document.getElementById('jsonData').textContent = jsonData;
       } else {
-        // If no data is found, show a default message
-        document.getElementById("jsonData").textContent = "No data found in local storage.";
+        document.getElementById('jsonData').textContent = 'No data found in local storage.';
       }
     }
 
